@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #
 # Copyright (C) 2018 The LineageOS Project
 #
@@ -113,6 +114,38 @@ $(IMS_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	$(hide) ln -sf /system_ext/lib64/$(notdir $@) $@
 
 ALL_DEFAULT_INSTALLED_MODULES += $(IMS_SYMLINKS)
+=======
+LOCAL_PATH := $(call my-dir)
+ifeq ($(BOARD_VENDOR_PLATFORM),xiaomi-sdm660)
+include $(CLEAR_VARS)
+
+LOCAL_MODULE_TAGS := optional
+LOCAL_STATIC_ANDROID_LIBRARIES := \
+    androidx.preference_preference
+
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
+LOCAL_PACKAGE_NAME := XiaomiParts
+LOCAL_CERTIFICATE := platform
+LOCAL_PRIVILEGED_MODULE := true
+LOCAL_PRIVATE_PLATFORM_APIS := true
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
+LOCAL_USE_AAPT2 := true
+
+package_resource_overlays := $(strip \
+    $(wildcard $(foreach dir, $(PRODUCT_PACKAGE_OVERLAYS), \
+      $(addprefix $(dir)/, packages/apps/XiaomiParts/res))) \
+    $(wildcard $(foreach dir, $(DEVICE_PACKAGE_OVERLAYS), \
+      $(addprefix $(dir)/, packages/apps/XiaomiParts/res))))
+
+LOCAL_RESOURCE_DIR := $(package_resource_overlays) $(LOCAL_RESOURCE_DIR)
+
+LOCAL_PROGUARD_ENABLED := disabled
+LOCAL_DEX_PREOPT := false
+
+include frameworks/base/packages/SettingsLib/common.mk
+
+include $(BUILD_PACKAGE)
+>>>>>>> 17e78dc... Import XiaomiParts from SDM660-common
 
 include $(call all-makefiles-under,$(LOCAL_PATH))
 endif
